@@ -1,3 +1,9 @@
+//on heroku set a new environment variable NODE_ENV to 'production'
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 //here is where we will define the general authentication flow per Spotify's example
 
 var express = require('express'); // Express web server framework
@@ -6,13 +12,19 @@ var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 //var jquery = require('jquery');
-var ax = require('axios');
+var axios = require('axios');
 const helmet = require("helmet");
 const compression = require("compression");
 
-var client_id = 'df82ef45244a4a75ba8ffc75e2b86819'; // Your client id
-var client_secret = '1b4d4a1ec999479f9a976574576cc5f1'; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var port = 8888;
+var client_id = process.env.REACT_APP_CLIENT_ID; // Your client id
+var client_secret = process.env.REACT_APP_CLIENT_SECRET; // Your secret
+var redirect_uri = "http://localhost:" + port + "/callback"; // Your redirect uri
+//if in prod, set port and redirect_uri appropriately
+if (process.env.NODE_ENV == "production") {
+    port = process.env.PORT;
+    redirect_uri = process.env.SPOTIFY_CALL_BACK_URI;
+}
 
 
 
@@ -165,7 +177,7 @@ if (state === null || state !== storedState) {
 //         "https://api.spotify.com/v1/recommendations?" +
 //         querystring.stringify(requestData);
 
-//     ax({
+//     axios({
 //         method: "get",
 //         url: url,
 //         headers: {
@@ -187,13 +199,15 @@ if (state === null || state !== storedState) {
 
 app.get("/trackSearch", function (req, res) {
     let url =
+        //"https://api.spotify.com/v1/search?q=abba&type=track&market=US";
         "https://api.spotify.com/v1/search?" +
         querystring.stringify({
             q: req.query.track_value,
+            limit: req.query.limit,
             type: "track"
         });
 
-    ax({
+    axios({
         method: 'GET',
         url: url,
         headers: {
@@ -205,14 +219,12 @@ app.get("/trackSearch", function (req, res) {
                 res.json({
                     status: response.status,
                     message: "success",
-                    trackResult: response.data,
-                    isError: false
+                    trackResult: response.data
                 });
             } else {
                 res.json({
                     status: "404",
-                    message: "Track not found",
-                    isError: false
+                    message: "Track not found"
                 });
             }
         })
@@ -227,29 +239,31 @@ function handleError(error) {
         return {
             status: error.response.status,
             message: "Token time out please log in again",
-            trackResult: null,
-            isError: true
+            trackResult: null
         };
     } else if (error.response.status == "429") {
         return {
             status: error.response.status,
             message: "Too many requests. Please try again in a few minutes.",
-            trackResult: null,
-            isError: true
+            trackResult: null
         };
-    } else {
+    } else if (error.response.status == "400") {
         return {
             status: error.response.status,
-            message:
-                "Something went wrong, no idea what happened. You're on your own!",
-            trackResult: null,
-            isError: true
+            message: error.message,
+            trackResult: null
+        };
+    }else {
+        return {
+            status: error.response.status,
+            message: "Something went wrong, no idea what happened. You're on your own!",
+            trackResult: null
         };
     }
 }
 
 
-console.log('Listening on 8888');
-app.listen(8888);
+console.log('Listening on port: '+ port);
+app.listen(port);
 
 
