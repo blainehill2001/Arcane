@@ -9,12 +9,14 @@ const SearchTrack = ({ seedTracks, updateSeedTrack }) => {
     const { register, handleSubmit, watch, errors } = useForm();
     const [trackQuery, setTrackQuery] = useState('');
     const [tracks, setTracks] = useState([]);
+    const [searched, setSearched] = useState(false);
 
     function handleChange(event) {
         setTrackQuery({...trackQuery, [event.target.name]: event.target.value})
     }
 
     const onSubmit = () => {
+        setSearched(true);
         searchTrackByName(trackQuery.query, 'arcane-token-key');
     }
 
@@ -57,23 +59,7 @@ const SearchTrack = ({ seedTracks, updateSeedTrack }) => {
     }
 
     function addTracktoSeeds(track){
-        // if(!track || track.length < 1){
-        //     console.log("there was no track");
-        //     return
-        // }
-        // let tracksArray = sessionStorage.getItem('tracks')
-        //     ? JSON.parse(sessionStorage.getItem('tracks'))
-        //     : []
-        // let artistsArray = sessionStorage.getItem('artists')
-        //     ? JSON.parse(sessionStorage.getItem('artists'))
-        //     : []
-        // let genresArray = sessionStorage.getItem('genres')
-        //     ? JSON.parse(sessionStorage.getItem('genres'))
-        //     : []
-        // if(tracksArray.length + artistsArray.length + genresArray <= 5){
-        //     tracksArray.push(track)
-        //     sessionStorage.setItem('tracks', JSON.stringify(tracksArray))
-        // }
+
         updateSeedTrack(seedTracks, track);
         
     }
@@ -97,18 +83,20 @@ const SearchTrack = ({ seedTracks, updateSeedTrack }) => {
                 </div>
             </Form>
             
-            <div class="flex flex-row mx-16 my-4 px-4 py-4 ring rounded-lg">
-                {tracks.map((track) => {
-                    return(
-                        <div class="container">
-                            <button class="object-cover w-full h-full p-4 ring rounded-lg hover:bg-blue-500 active:bg-green-800" key={track.id} onClick={() => addTracktoSeeds(track)} name={track.name}>   
-                                <img src={track.album.images[0].url} />
-                                <p>{track.name} <br /> <i>by {track.artists[0].name}</i></p>
-                            </button>
-                        </div>
-                    );
-                })}
-            </div>
+            {searched == true && 
+                <div class="flex flex-row mx-16 my-4 px-4 py-4 ring rounded-lg">
+                    {tracks.map((track) => {
+                        return(
+                            <div class="container">
+                                <button class="object-cover w-full h-full p-4 ring rounded-lg hover:bg-blue-500 active:bg-green-800" key={track.id} onClick={() => addTracktoSeeds(track)} name={track.name}>   
+                                    <img src={track.album.images[0].url} />
+                                    <p>{track.name} <br /> <i>by {track.artists[0].name}</i></p>
+                                </button>
+                            </div>
+                            );
+                        })}
+                </div>
+            }
         </div>
 
     );

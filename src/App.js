@@ -5,8 +5,7 @@ import Welcome from './Welcome';
 import SearchTrack from './SearchTrack';
 import AuthenticatedHOC from './AuthenticatedHOC';
 import DisplaySeeds from './DisplaySeeds';
-import axios from 'axios';
-const spotifyWebApi = new Spotify();
+import DisplayRecommendations from './DisplayRecommendations';
 var _ = require('underscore');
 
 
@@ -45,6 +44,7 @@ function App() {
 
             <SearchTrack seedTracks={seedTracks} updateSeedTrack={updateSeedTrack} />
             <DisplaySeeds seedTracks={seedTracks} deleteSeedTrack={deleteSeedTrack}/>
+            <DisplayRecommendations seedTracks={seedTracks}/>
           </div>
         </header>
     </div>
