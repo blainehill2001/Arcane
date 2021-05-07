@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, {  useEffect } from "react";
 import { Button } from 'react-bootstrap';
 import Cookies from "js-cookie";
 import music_note from "./music/music.png"
