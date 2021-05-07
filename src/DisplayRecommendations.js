@@ -1,38 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import $ from 'jquery';
 import { Button } from 'react-bootstrap';
+import Cookies from "js-cookie";
 
 
-const DisplayRecommendations = ({ seedTracks }) => {
-
-    const [recommendations, setRecommendations] = useState([]);
-    const [generated, setGenerated] = useState(false);
+const DisplayRecommendations = ({ seedTracks, recommendations, updateRecommendations, deleteRecommendation }) => {
 
     function generateRecommendations(seedTracks, token_key) {
-
+        
         let requestData = {
-            limit: 25,
-            //seed_artists: seed_artists,
+            limit: "25",
             seed_tracks: seedTracks,
-            token: localStorage.getItem(token_key)
-            
+            token: Cookies.get(token_key)
         };
 
         $.ajax({
             url: "/recommendations",
-            data: requestData
+            dataType : 'json',
+            data: requestData,
+            type: "POST"
         }).done(function (data) {
             if (responseIsSuccess(data)) {
-                setGenerated(true);
-                setRecommendations(data.trackResult);
-                //recList_id = displayRecommendations(data.trackResult);
-                //recList_cache = data.trackResult;
-                //document.getElementById("explicit-button").checked = false;
+                data.trackResult.tracks.forEach((track) => {updateRecommendations(recommendations, track);});
             }
-            // loading("rec-button", false, origText);
-            // onRemoveSpinner();
-            // playlistIsCreated = false;
-            // explicitPlaylistIsCreated = false;
         });
     }
 
@@ -62,21 +52,25 @@ const DisplayRecommendations = ({ seedTracks }) => {
         <div>
             {seedTracks.length > 0 &&
                 <div>
-                    <br />
-                    <Button class="bg-gray-800" type="submit" defaultValue="Submit" variant="secondary btn-lg" href="http://localhost:8888/recommendations">
-                        Get Recommendations!
-                    </Button>
-                    <br />
                     <div>
-                        {generated == true &&
-                            <div class="flex flex-row mx-16 my-4 px-4 py-4 ring rounded-lg">
+                        <br />
+                        <Button class="bg-gray-800" variant="secondary btn-lg" onClick={() => generateRecommendations(seedTracks.map( track => track.id), 'arcane-token-key')}>
+                            Get Recommendations!
+                        </Button>
+                        <br />
+                        <br />
+                    </div>
+                    <div>
+                        { recommendations.length > 0 &&
+                            <div class="flex flex-row flex-wrap mx-16 my-4 px-4 py-4 ring rounded-lg">
                             {recommendations.map((track) => {
                                 return(
-                                    <div class="container">
-                                        <button class="object-cover w-full h-full p-4 ring rounded-lg hover:bg-blue-500 active:bg-green-800" key={track.id}>   
+                                    <div class="container mx-auto w-1/5 p-3">
+                                        <button class="object-cover w-auto h-auto p-3 ring rounded-lg hover:bg-blue-500 active:bg-green-800" key={track.id}  onClick={() => deleteRecommendation(recommendations, track)}>   
                                             <img src={track.album.images[0].url} />
-                                            <p>{track.name} <br /> <i>by {track.artists[0].name}</i></p>
+                                            <p class="text-base md:text-lg sm:text-sm">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
                                         </button>
+                                        <br />
                                     </div>
                                     );
                                 })}

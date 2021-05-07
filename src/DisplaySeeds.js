@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const DisplaySeeds = ({ seedTracks, deleteSeedTrack }) => {
+const DisplaySeeds = ({ seedTracks, deleteSeed }) => {
     
     return(
         <div>
@@ -13,7 +13,7 @@ const DisplaySeeds = ({ seedTracks, deleteSeedTrack }) => {
                         {seedTracks.map((seedTrack) => {
                             return(
                                 <div class="container" key={seedTrack.id}>
-                                    <button name={seedTrack.name} class="object-cover w-full h-full p-4 ring rounded-lg hover:bg-blue-500 active:bg-green-800" onClick={() => deleteSeedTrack(seedTracks, seedTrack)}>
+                                    <button name={seedTrack.name} class="object-cover w-full h-full p-4 ring rounded-lg hover:bg-blue-500 active:bg-green-800" onClick={() => deleteSeed(seedTracks, seedTrack)}>
                                         <img src={seedTrack.album.images[0].url} />
                                         <p>{seedTrack.name} <br /> <i>by {seedTrack.artists[0].name}</i></p>
                                     </button>

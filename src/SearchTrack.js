@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import $ from 'jquery';
 import { Form, InputGroup, Button } from 'react-bootstrap';
+import Cookies from "js-cookie";
 
 
-const SearchTrack = ({ seedTracks, updateSeedTrack }) => {
+const SearchTrack = ({ seedTracks, updateSeeds }) => {
 
     const { register, handleSubmit, watch, errors } = useForm();
     const [trackQuery, setTrackQuery] = useState('');
@@ -23,11 +24,12 @@ const SearchTrack = ({ seedTracks, updateSeedTrack }) => {
     function searchTrackByName(track_name, token_key) {
 
         $.ajax({
-            url: "http://localhost:8888/trackSearch",
+            url: "/trackSearch",
             data: {
                 track_value: track_name,
-                token: localStorage.getItem(token_key),
-                limit: "5"
+                token: Cookies.get(token_key),
+                limit: "5",
+                type: "GET"
             }
         }).done(function (data) {
             if (responseIsSuccess(data)) {
@@ -59,8 +61,10 @@ const SearchTrack = ({ seedTracks, updateSeedTrack }) => {
     }
 
     function addTracktoSeeds(track){
-
-        updateSeedTrack(seedTracks, track);
+        if(seedTracks.length < 5){
+            updateSeeds(seedTracks, track);
+        }
+        
         
     }
 
@@ -75,7 +79,7 @@ const SearchTrack = ({ seedTracks, updateSeedTrack }) => {
                     </Form.Text>
 
                     <InputGroup className="mb-3">
-                        <Form.Control required id="validationTrack" class="p-12" name="query" placeholder="Enter track name" defaultValue={''} autoComplete="off" onChange={handleChange} ref={register({minLength: 2})}/>
+                        <Form.Control required id="validationTrack" class="p-12" name="query" placeholder="Enter track name" defaultValue={''} autoComplete="on" onChange={handleChange} ref={register({minLength: 2})}/>
                         <InputGroup.Append>
                         <Button class="bg-gray-800" type="submit" defaultValue="Submit" variant="secondary">Submit</Button>
                         </InputGroup.Append>
@@ -84,10 +88,10 @@ const SearchTrack = ({ seedTracks, updateSeedTrack }) => {
             </Form>
             
             {searched == true && 
-                <div class="flex flex-row mx-16 my-4 px-4 py-4 ring rounded-lg">
+                <div class="flex flex-row flex-wrap mx-8 my-4 px-4 py-4 ring rounded-lg">
                     {tracks.map((track) => {
                         return(
-                            <div class="container">
+                            <div class="container mx-auto w-1/5 p-3">
                                 <button class="object-cover w-full h-full p-4 ring rounded-lg hover:bg-blue-500 active:bg-green-800" key={track.id} onClick={() => addTracktoSeeds(track)} name={track.name}>   
                                     <img src={track.album.images[0].url} />
                                     <p>{track.name} <br /> <i>by {track.artists[0].name}</i></p>
