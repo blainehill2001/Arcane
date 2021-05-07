@@ -37,7 +37,8 @@
     "start": "concurrently \"node server.js\" \"craco start\"",
     "build": "node server.js && craco build",
     "test": "node server.js && craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "heroku-postbuild": "npm install && npm build"
   },
   "eslintConfig": {
     "extends": [
