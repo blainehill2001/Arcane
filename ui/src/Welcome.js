@@ -36,9 +36,9 @@ function Welcome({ hasLoggedIn }){
                     <br />
                 </div>
                 <br />
-                <sub class="text-muted my-10 mx-auto">{quote}</sub>
+                <small class="text-muted text-small text-center my-10 mx-auto">{quote}</small>
                 <br />
-                <small class="text-muted my-10">Here's how it works: login with your Spotify account. Then, select up to five of your favorite songs to be the seeds for your curated mix. Then plug in some headphones and enjoy your own Arcane experience!</small>
+                <small class="text-muted text-center my-10">Here's how it works: login with your Spotify account. Then, select up to five of your favorite songs to be the seeds for your curated mix. Then plug in some headphones and enjoy your own Arcane experience!</small>
                 <br />
             </div>
             { hasLoggedIn ?
