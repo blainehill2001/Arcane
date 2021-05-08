@@ -35,7 +35,7 @@ const DisplayRecommendations = ({ seedTracks, recommendations, updateRecommendat
         }
 
         var msg = data.message;
-        // if unauthorized we need to prompt log in
+        
         if (error && parseInt(error) == 401) {
             alert(msg);
             return false;
