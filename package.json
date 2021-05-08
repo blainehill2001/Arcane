@@ -17,7 +17,6 @@
     "helmet": "^4.3.1",
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
-    "npx": "^10.2.2",
     "popper.js": "^1.16.1",
     "postcss": "^7.0.35",
     "query-string": "^7.0.0",
@@ -35,11 +34,11 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "npx run concurrently \"node server.js\" \"craco start\"",
+    "start": "concurrently \"node server.js\" \"craco start\"",
     "build": "node server.js && craco build",
     "test": "node server.js && craco test",
     "eject": "react-scripts eject",
-    "heroku-postbuild": "npm install && npm build"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm build"
   },
   "eslintConfig": {
     "extends": [
