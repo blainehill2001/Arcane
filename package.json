@@ -15,8 +15,10 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "helmet": "^4.3.1",
+    "http-proxy-middleware": "^2.0.0",
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
+    "path": "^0.12.7",
     "popper.js": "^1.16.1",
     "postcss": "^7.0.35",
     "query-string": "^7.0.0",
@@ -35,10 +37,8 @@
   },
   "scripts": {
     "start": "concurrently \"node server.js\" \"craco start\"",
-    "build": "node server.js && craco build",
-    "test": "node server.js && craco test",
-    "eject": "react-scripts eject",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm build"
+    "build": "craco build",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build"
   },
   "eslintConfig": {
     "extends": [

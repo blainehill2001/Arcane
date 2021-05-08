@@ -15,7 +15,7 @@ const DisplayRecommendations = ({ seedTracks, recommendations, updateRecommendat
         };
 
         $.ajax({
-            url: "/recommendations",
+            url: "/api/recommendations",
             dataType : 'json',
             data: requestData,
             type: "POST"

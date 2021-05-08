@@ -1,5 +1,6 @@
 import React, {  useEffect } from "react";
 import { Button } from 'react-bootstrap';
+import axios from "axios";
 import Cookies from "js-cookie";
 import music_note from "./music/music.png"
 
@@ -9,30 +10,12 @@ function Welcome({ hasLoggedIn }){
 
     const [quote, setQuote] = React.useState("");
 
-    function getHashParams() {
-        var hashParams = {};
-        var e, r = /([^&;=]+)=?([^&;]*)/g,
-            q = window.location.hash.substring(1);
-        while ( e = r.exec(q)) {
-          hashParams[e[1]] = decodeURIComponent(e[2]);
-        }
-        return hashParams;
-    }
-
-    function setCookie(){
-        Cookies.remove(token_key);
-        var params = getHashParams();
-        if(params.access_token != null && params.access_token != ''){
-            Cookies.set(token_key, params.access_token, { expires: 3599/86400 }) //set the cookie to expire after 59 min and 59 sec 
-        }
-    }
-
     useEffect(() => {
         async function fetchQuote() {
             try {
                 const response = await fetch('https://api.quotable.io/random'); //used the following API: https://github.com/lukePeavey/quotable
                 const data = await response.json();
-                console.log(`${data.content} —${data.author}`);
+                //console.log(`${data.content} —${data.author}`);
                 setQuote(`${data.content} —${data.author}`);
             } catch (error) {
               console.log(error);
@@ -61,8 +44,8 @@ function Welcome({ hasLoggedIn }){
             { hasLoggedIn ?
                 <div></div>
                 :
-                <a href="/login">
-                    <Button class="bg-gray-800" variant="secondary btn-lg" onClick={() => setCookie()}>
+                <a href="/api/login">
+                    <Button class="bg-gray-800" variant="secondary btn-lg">
                         Log in with Spotify!
                     </Button>
                 </a>

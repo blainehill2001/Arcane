@@ -16,10 +16,10 @@ var helmet = require("helmet");
 var compression = require("compression");
 var bodyParser = require('body-parser');
 
-var port = 8888;
+var port = 3001;
 var client_id = process.env.REACT_APP_CLIENT_ID; // Your client id
 var client_secret = process.env.REACT_APP_CLIENT_SECRET; // Your secret
-var redirect_uri = "http://localhost:" + port + "/callback"; // Your redirect uri
+var redirect_uri = "http://localhost:" + port + "/api/callback"; // Your redirect uri
 //if in prod, set port and redirect_uri appropriately
 if (process.env.NODE_ENV == "production") {
     port = process.env.PORT;
@@ -67,6 +67,12 @@ var app = express();
 //     next();
 // });
 
+// app.use(express.static(path.join(__dirname, '/build')));
+// app.get('/*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '/build', 'index.html'));
+// })
+
+
 app.use(express.static(__dirname + '/public'))
     .use(helmet())
     .use(compression())
@@ -75,7 +81,7 @@ app.use(express.static(__dirname + '/public'))
     .use(bodyParser.json({limit: '150mb', extended: "true", parameterLimit: 1000000}))
     .use(bodyParser.urlencoded({limit: '150mb', extended: "true", parameterLimit: 1000000}));
 
-app.get('/login', function(req, res) {
+app.get('/api/login', function(req, res) {
 
     var state = generateRandomString(16);
     res.clearCookie(stateKey);
@@ -93,7 +99,7 @@ app.get('/login', function(req, res) {
         }));
 });
 
-app.get('/callback', function(req, res) {
+app.get('/api/callback', function(req, res) {
 
     // your application requests refresh and access tokens
     // after checking the state parameter
@@ -104,7 +110,7 @@ app.get('/callback', function(req, res) {
 
     if (state === null || state !== storedState) {
         res.clearCookie(stateKey);
-        res.redirect('/' +
+        res.redirect('http://localhost:3000//' +
         querystring.stringify({
             error: 'state_mismatch'
         }));
@@ -129,14 +135,14 @@ app.get('/callback', function(req, res) {
                 refresh_token = body.refresh_token;
 
             // we can also pass the token to the browser to make requests from there
-            res.redirect('/#' +
+            res.redirect('http://localhost:3000//#' +
             querystring.stringify({
                 access_token: access_token,
                 refresh_token: refresh_token
             }));
         } else {
             res.clearCookie(stateKey);
-            res.redirect('/' +
+            res.redirect('http://localhost:3000//' +
             querystring.stringify({
                 error: 'invalid_token'
             }));
@@ -145,7 +151,7 @@ app.get('/callback', function(req, res) {
     }
 });
 
-app.get("/trackSearch", function (req, res) {
+app.get("/api/trackSearch", function (req, res) {
     let url =
         "https://api.spotify.com/v1/search?" +
         querystring.stringify({
@@ -180,7 +186,7 @@ app.get("/trackSearch", function (req, res) {
         });
 });
 
-app.post("/recommendations", function (req, res) {
+app.post("/api/recommendations", function (req, res) {
     let requestData = {
         limit: req.body.limit,
         seed_tracks: querystring.escape(req.body.seed_tracks)
@@ -220,7 +226,7 @@ app.post("/recommendations", function (req, res) {
 
 
 // Creates a playlist, then calls function to add songs to playlist
-app.get("/createPlaylist", function (req, res) {
+app.get("/api/createPlaylist", function (req, res) {
 
     let date = new Date();
     let dateStr = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
@@ -278,7 +284,7 @@ app.get("/createPlaylist", function (req, res) {
         })
         .catch((error) => {
             console.error("Failed to load user account: " + error);
-            res.redirect('/' +
+            res.redirect('http://localhost:3000//' +
             querystring.stringify({
                 error: 'invalid_token'
             }));
@@ -286,7 +292,7 @@ app.get("/createPlaylist", function (req, res) {
 });
 
 // Add a list of tracks by id to a playlist by id
-app.get("/addTracks", function (req, res) {
+app.get("/api/addTracks", function (req, res) {
     let track_list = req.query.recommendation_ids;
     let playlistId = req.query.playlist_id;
 
@@ -347,7 +353,6 @@ function handleError(error) {
         };
     }
 }
-
 
 console.log('Listening on port: '+ port);
 app.listen(port);

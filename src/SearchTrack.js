@@ -24,7 +24,7 @@ const SearchTrack = ({ seedTracks, updateSeeds }) => {
     function searchTrackByName(track_name, token_key) {
 
         $.ajax({
-            url: "/trackSearch",
+            url: "/api/trackSearch",
             data: {
                 track_value: track_name,
                 token: Cookies.get(token_key),

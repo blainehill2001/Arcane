@@ -14,7 +14,7 @@ const CreatePlaylist= ({ seedTracks, recommendations }) => {
         };
 
         $.ajax({
-            url: "/createPlaylist",
+            url: "/api/createPlaylist",
             dataType : 'json',
             data: requestData,
             type: "GET"
@@ -28,7 +28,7 @@ const CreatePlaylist= ({ seedTracks, recommendations }) => {
                 }
 
                 $.ajax({
-                    url: "/addTracks",
+                    url: "/api/addTracks",
                     dataType : 'json',
                     data: requestData2,
                     type: "GET"

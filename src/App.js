@@ -38,18 +38,52 @@ function App() {
   }
 
   function checkForToken(){
+      if(Cookies.get(token_key) == undefined || Cookies.get(token_key) == null){
+        return false;
+      }
+      else{
+        return true;
+      }
+  }
+  function updateHasLoggedIn(){
     if(Cookies.get(token_key) == undefined || Cookies.get(token_key) == null){
-        setHasLoggedIn(false);
+      setHasLoggedIn(false);
     }
     else{
       setHasLoggedIn(true);
     }
+  }
+
+  function getHashParams() {
+    var hashParams = {};
+    var e, r = /([^&;=]+)=?([^&;]*)/g,
+        q = window.location.hash.substring(1);
+    while ( e = r.exec(q)) {
+      hashParams[e[1]] = decodeURIComponent(e[2]);
+    }
+    return hashParams;
+}
+
+function setCookie(){
+    Cookies.remove(token_key);
+    var params = getHashParams();
+    if(params.access_token != null && params.access_token != ''){
+        Cookies.set(token_key, params.access_token, { expires: 3599/86400 }) //set the cookie to expire after 59 min and 59 sec 
+    }
 }
 
   useEffect(() => {
-    checkForToken();
-    console.log(hasLoggedIn);
-    return hasLoggedIn;
+    updateHasLoggedIn();
+    var params = getHashParams();
+    let bool = false;
+    if(params.access_token != null && params.access_token != ''){
+      bool = true;
+      
+    }
+    if(checkForToken() == false && bool == true){
+      setCookie();
+    }
+    updateHasLoggedIn();
   }, []);
   
 
