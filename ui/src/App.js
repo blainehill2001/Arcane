@@ -5,6 +5,8 @@ import DisplaySeeds from './DisplaySeeds';
 import DisplayRecommendations from './DisplayRecommendations';
 import CreatePlaylist from './CreatePlaylist'
 import Cookies from "js-cookie";
+import hallowed_background from "./assets/Hollowed-Boxes.svg"
+import './App.css'; 
 var _ = require('underscore');
 
 
@@ -16,6 +18,7 @@ function App() {
   const[recommendations, setRecommendations] = useState([]);
   const token_key = 'arcane-token-key';
   const[hasLoggedIn, setHasLoggedIn] = useState(false);
+  const[background, setBackground] = useState("");
 
   const updateSeeds = (trackArray, newTrack) => {
     trackArray.push(newTrack);
@@ -34,6 +37,14 @@ function App() {
 
   const deleteRecommendation = (trackArray, trackToBeDeleted) => {
     trackArray = _.without(trackArray, trackToBeDeleted);
+    setRecommendations([...trackArray]);
+  }
+
+  const clearRecommendations = (trackArray) => {
+    let length = recommendations.length;
+    for(let i = 0; i < length; i++){
+      trackArray.pop();
+    }
     setRecommendations([...trackArray]);
   }
 
@@ -62,17 +73,34 @@ function App() {
       hashParams[e[1]] = decodeURIComponent(e[2]);
     }
     return hashParams;
-}
+  }
 
-function setCookie(){
-    Cookies.remove(token_key);
-    var params = getHashParams();
-    if(params.access_token != null && params.access_token != ''){
-        Cookies.set(token_key, params.access_token, { expires: 3599/86400 }) //set the cookie to expire after 59 min and 59 sec 
+  function setCookie(){
+      Cookies.remove(token_key);
+      var params = getHashParams();
+      if(params.access_token != null && params.access_token != ''){
+          Cookies.set(token_key, params.access_token, { expires: 3599/86400 }) //set the cookie to expire after 59 min and 59 sec 
+      }
+  }
+
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+
+  function generateBackground(){
+    if(background == ""){
+      let randomNumber = getRandomInt(10);
+      let backgroundClassname = "App-background" + randomNumber.toString();
+      console.log(backgroundClassname);
+      setBackground(backgroundClassname);
     }
-}
+    return background;
+  }
 
   useEffect(() => {
+    if(!hasLoggedIn){
+      Cookies.remove(token_key);
+    }
     updateHasLoggedIn();
     var params = getHashParams();
     let bool = false;
@@ -84,22 +112,29 @@ function setCookie(){
       setCookie();
     }
     updateHasLoggedIn();
+    console.log(hasLoggedIn);
   }, []);
   
+  const content = (
+    <header className="App-header">
+      <div class="w-11/12">
+          <Welcome  hasLoggedIn={hasLoggedIn}/>
+          <SearchTrack seedTracks={seedTracks} updateSeeds={updateSeeds}/>
+          <DisplaySeeds seedTracks={seedTracks} deleteSeed={deleteSeed}/>
+          <DisplayRecommendations seedTracks={seedTracks} recommendations={recommendations} updateRecommendations={updateRecommendations} deleteRecommendation={deleteRecommendation} clearRecommendations={clearRecommendations}/>
+          <CreatePlaylist seedTracks={seedTracks} recommendations={recommendations}/>
+        </div>
+      </header>
+  );
 
 
   return (
     <div className="App">
-      <header className="App-header">
-        <div class="w-11/12">
-          <Welcome  hasLoggedIn={hasLoggedIn}/>
-          <SearchTrack seedTracks={seedTracks} updateSeeds={updateSeeds} />
-          <DisplaySeeds seedTracks={seedTracks} deleteSeed={deleteSeed}/>
-          <DisplayRecommendations seedTracks={seedTracks} recommendations={recommendations} updateRecommendations={updateRecommendations} deleteRecommendation={deleteRecommendation}/>
-          <CreatePlaylist seedTracks={seedTracks} recommendations={recommendations}/>
-        </div>
-      </header>
+      <div className={generateBackground()}>
+        {content}
+      </div>
     </div>
+    
   );
 }
 

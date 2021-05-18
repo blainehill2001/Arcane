@@ -13,26 +13,42 @@ const CreatePlaylist= ({ seedTracks, recommendations }) => {
             token: Cookies.get(token_key)
         };
 
+        let url;
+        if (process.env.NODE_ENV == "production") {
+            url = "/api/createPlaylist";
+        } else {
+            url = "http://localhost:3001/api/createPlaylist";
+        }
+
         $.ajax({
-            url: "/api/createPlaylist",
+            url: url,
             dataType : 'json',
             data: requestData,
             type: "GET"
         }).done(function (response) {
             if (responseIsSuccess(response)) {
 
+                let url2;
+                if (process.env.NODE_ENV == "production") {
+                    url2 = "/api/addTracks";
+                } else {
+                    url2 = "http://localhost:3001/api/addTracks";
+                }
+
+
                 let requestData2 ={
                     recommendation_ids: recommendation_ids,
                     playlist_id: response.data,
                     token: Cookies.get(token_key)
                 }
+                console.log(response.data);
 
                 $.ajax({
-                    url: "/api/addTracks",
+                    url: url2,
                     dataType : 'json',
                     data: requestData2,
                     type: "GET"
-                }).done(function(response2){
+                }).done(function(){
                     alert("Check out Spotify for your new Arcane Mix!");
                 })
             }

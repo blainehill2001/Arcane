@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 import Cookies from "js-cookie";
 
 
-const DisplayRecommendations = ({ seedTracks, recommendations, updateRecommendations, deleteRecommendation }) => {
+const DisplayRecommendations = ({ seedTracks, recommendations, updateRecommendations, deleteRecommendation, clearRecommendations }) => {
 
     function generateRecommendations(seedTracks, token_key) {
         
@@ -15,13 +15,23 @@ const DisplayRecommendations = ({ seedTracks, recommendations, updateRecommendat
             token: Cookies.get(token_key)
         };
 
+        let url;
+        if (process.env.NODE_ENV == "production") {
+            url = "/api/recommendations";
+        } else {
+            url = "http://localhost:3001/api/recommendations";
+        }
+
         $.ajax({
-            url: "/api/recommendations",
+            url: url,
             dataType : 'json',
             data: requestData,
             type: "POST"
         }).done(function (data) {
             if (responseIsSuccess(data)) {
+                if(recommendations.length > 0){
+                    clearRecommendations(recommendations);
+                }
                 data.trackResult.tracks.forEach((track) => {updateRecommendations(recommendations, track);});
             }
         });
@@ -63,13 +73,13 @@ const DisplayRecommendations = ({ seedTracks, recommendations, updateRecommendat
                     </div>
                     <div>
                         { recommendations.length > 0 &&
-                            <div class="flex flex-row flex-wrap mx-16 my-4 px-4 py-4 ring rounded-lg">
+                            <div class="flex flex-row flex-wrap mx-8 my-4 px-4 py-4 ring ring-transparent rounded-lg bg-green-700">
                             {recommendations.map((track) => {
                                 return(
-                                    <div class="container mx-auto w-1/5 p-3">
-                                        <button class="object-cover w-auto h-auto p-3 ring rounded-lg hover:bg-blue-500 active:bg-green-800" key={track.id}  onClick={() => deleteRecommendation(recommendations, track)}>   
+                                    <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3">
+                                        <button class="object-cover w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" key={track.id}  onClick={() => deleteRecommendation(recommendations, track)}>   
                                             <img src={track.album.images[0].url} />
-                                            <p class="text-base md:text-lg sm:text-sm">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
+                                            <p class="text-xs sm:text-sm md:text-base lg:text-lg">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
                                         </button>
                                         <br />
                                     </div>

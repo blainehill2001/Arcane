@@ -113,10 +113,17 @@ app.get('/api/callback', function(req, res) {
 
     if (state === null || state !== storedState) {
         res.clearCookie(stateKey);
-        res.redirect('/' +
-        querystring.stringify({
+        if(process.env.NODE_ENV == "production"){
+            res.redirect('/' +
+            querystring.stringify({
+                error: 'state_mismatch'
+            })); 
+        } else{
+            res.redirect('http://localhost:3000/' +
+            querystring.stringify({
             error: 'state_mismatch'
-        }));
+            }));
+        }
     } else {
         var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
@@ -138,17 +145,32 @@ app.get('/api/callback', function(req, res) {
                 refresh_token = body.refresh_token;
 
             // we can also pass the token to the browser to make requests from there
-            res.redirect('/#' +
-            querystring.stringify({
+            if(process.env.NODE_ENV == "production"){
+                res.redirect('/#' +
+                querystring.stringify({
                 access_token: access_token,
                 refresh_token: refresh_token
-            }));
+                }));
+            } else{
+                res.redirect('http://localhost:3000/#' +
+                querystring.stringify({
+                access_token: access_token,
+                refresh_token: refresh_token
+                }));
+            }
         } else {
             res.clearCookie(stateKey);
-            res.redirect('/' +
-            querystring.stringify({
-                error: 'invalid_token'
-            }));
+            if(process.env.NODE_ENV == "production"){
+                res.redirect('/' +
+                querystring.stringify({
+                    error: 'state_mismatch'
+                })); 
+            } else{
+                res.redirect('http://localhost:3000/' +
+                querystring.stringify({
+                error: 'state_mismatch'
+                }));
+            }
         }
         });
     }
@@ -230,21 +252,17 @@ app.post("/api/recommendations", function (req, res) {
 
 // Creates a playlist, then calls function to add songs to playlist
 app.get("/api/createPlaylist", function (req, res) {
-
-    let date = new Date();
-    let dateStr = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
-    let name = "Arcane Mix";
-    let desc =
-        "Your Arcane playlist featuring: "+ req.query.seedTrack_names.reduce((acc, track) => {
-            if(track == req.query.seedTrack_names[req.query.seedTrack_names.length -1] && req.query.seedTrack_names.length > 1){
-                acc += "and ";
-            }
-            acc += track
-            if(track != req.query.seedTrack_names[req.query.seedTrack_names.length -1] && req.query.seedTrack_names.length > 2){
-                acc += ", ";
-            }
-            return acc;
-          }, "");+"\n Created on " + dateStr;
+    
+    let desc = "Your Arcane playlist starring: ";
+    for(let i = 0; i < req.query.seedTrack_names.length; i++){
+        if(i == req.query.seedTrack_names.length-1 && req.query.seedTrack_names.length > 1){
+            desc += "and ";
+        }
+        desc += req.query.seedTrack_names[i];
+        if(i != req.query.seedTrack_names.length - 1){
+            desc += ", ";
+        }
+    }
 
     // get user profile information
     axios({
@@ -261,7 +279,7 @@ app.get("/api/createPlaylist", function (req, res) {
             let url = "https://api.spotify.com/v1/users/" + id + "/playlists";
 
             const body = {
-                name: name,
+                name: "Arcane Mix",
                 description: desc,
             };
 
@@ -287,10 +305,17 @@ app.get("/api/createPlaylist", function (req, res) {
         })
         .catch((error) => {
             console.error("Failed to load user account: " + error);
-            res.redirect('/' +
-            querystring.stringify({
-                error: 'invalid_token'
-            }));
+            if(process.env.NODE_ENV == "production"){
+                res.redirect('/' +
+                querystring.stringify({
+                    error: 'state_mismatch'
+                })); 
+            } else{
+                res.redirect('http://localhost:3000/' +
+                querystring.stringify({
+                error: 'state_mismatch'
+                }));
+            }
         });
 });
 

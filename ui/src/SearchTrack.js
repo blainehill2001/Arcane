@@ -4,9 +4,11 @@ import { useForm } from "react-hook-form";
 import $ from 'jquery';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import Cookies from "js-cookie";
+import DisplayRecommendations from "./DisplayRecommendations";
+import { forEach } from 'core-js/es/array';
 
 
-const SearchTrack = ({ seedTracks, updateSeeds }) => {
+const SearchTrack = ({ seedTracks, updateSeeds}) => {
 
     const { register, handleSubmit, watch, errors } = useForm();
     const [trackQuery, setTrackQuery] = useState('');
@@ -24,8 +26,15 @@ const SearchTrack = ({ seedTracks, updateSeeds }) => {
 
     function searchTrackByName(track_name, token_key) {
 
+        let url;
+        if (process.env.NODE_ENV == "production") {
+            url = "/api/trackSearch";
+        } else {
+            url = "http://localhost:3001/api/trackSearch";
+        }
+
         $.ajax({
-            url: "/api/trackSearch",
+            url: url,
             data: {
                 track_value: track_name,
                 token: Cookies.get(token_key),
@@ -62,7 +71,11 @@ const SearchTrack = ({ seedTracks, updateSeeds }) => {
     }
 
     function addTracktoSeeds(track){
-        if(seedTracks.length < 5){
+        let isDuplicate = false;
+        seedTracks.forEach((seedTrack) => {if(seedTrack.id == track.id){
+            isDuplicate = true;
+        }});
+        if(seedTracks.length < 5 && isDuplicate == false){
             updateSeeds(seedTracks, track);
         }
         
@@ -89,13 +102,13 @@ const SearchTrack = ({ seedTracks, updateSeeds }) => {
             </Form>
             
             {searched == true && 
-                <div class="flex flex-row flex-wrap mx-8 my-4 px-4 py-4 ring rounded-lg">
+                <div class="flex flex-row flex-wrap mx-8 my-4 px-4 py-4 ring ring-transparent rounded-lg bg-green-700">
                     {tracks.map((track) => {
                         return(
-                            <div class="container mx-auto w-1/5 p-3">
-                                <button class="object-cover w-full h-full p-4 ring rounded-lg hover:bg-blue-500 active:bg-green-800" key={track.id} onClick={() => addTracktoSeeds(track)} name={track.name}>   
+                            <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3">
+                                <button class="object-cover w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" key={track.id} onClick={() => addTracktoSeeds(track)} name={track.name}>   
                                     <img src={track.album.images[0].url} />
-                                    <p>{track.name} <br /> <i>by {track.artists[0].name}</i></p>
+                                    <p class="text-xs sm:text-sm md:text-base lg:text-lg">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
                                 </button>
                             </div>
                             );
@@ -109,3 +122,6 @@ const SearchTrack = ({ seedTracks, updateSeeds }) => {
 
 
 export default SearchTrack;
+
+//flex flex-row flex-wrap mx-8 my-4 px-4 py-4 ring rounded-lg bg-green-700
+//mx-auto w-1/5 p-3
