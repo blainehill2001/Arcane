@@ -105,8 +105,8 @@ const SearchTrack = ({ seedTracks, updateSeeds, hasLoggedIn}) => {
                                 return(
                                     <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3">
                                         <button class="w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" key={track.id} onClick={() => addTracktoSeeds(track)} name={track.name}>   
+                                            <img src={track.album.images[0].url} class="object-scale-down"/>
                                             <div class="flex flex-row flex-wrap justify-around">
-                                                <img src={track.album.images[0].url} class="object-contain"/>
                                                 <p class="p-1 text-xs sm:text-sm md:text-base lg:text-lg">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
                                             </div>
                                         </button>
