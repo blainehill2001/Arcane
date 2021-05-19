@@ -1,22 +1,21 @@
 import React from "react";
-import $ from 'jquery';
 
 const DisplaySeeds = ({ seedTracks, deleteSeed }) => {
     
     return(
         <div>
             {seedTracks.length > 0 &&
-                <div>
-                    <br />
-                    Your Seeds are:
-                    <br />
-                    <div class="flex flex-row flex-wrap mx-8 my-4 px-4 py-4 ring ring-transparent rounded-lg bg-green-700">
+                <div class="mx-8 my-20 px-4 py-4 ring ring-transparent rounded-lg bg-green-700">
+                    <h2>Your Seeds are:</h2>
+                    <div class="flex flex-row flex-wrap">
                         {seedTracks.map((seedTrack) => {
                             return(
                                 <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3 h-full" key={seedTrack.id} id="heightgrabber">
                                     <button name={seedTrack.name} class="object-cover w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" onClick={() => deleteSeed(seedTracks, seedTrack)}>
-                                        <img src={seedTrack.album.images[0].url} />
-                                        <p class="text-xs sm:text-sm md:text-base lg:text-lg">{seedTrack.name} <br /> <i>by {seedTrack.artists[0].name}</i></p>
+                                        <div class="flex flex-row flex-wrap justify-around">
+                                            <img src={seedTrack.album.images[0].url} />
+                                            <p class="p-1 text-xs sm:text-sm md:text-base lg:text-lg">{seedTrack.name} <br /> <i>by {seedTrack.artists[0].name}</i></p>
+                                        </div>
                                     </button>
                                 </div>
                             );
@@ -25,9 +24,9 @@ const DisplaySeeds = ({ seedTracks, deleteSeed }) => {
                                 return(
                                     <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3" key={i}>
                                         <div class="object-cover w-full h-full p-4 ring ring-transparent rounded-lg min-h:full bg-green-800">
-                                            <div>
+                                            <div class="flex flex-row flex-wrap justify-around">
                                                 <img class="opacity-0" src={seedTracks[0].album.images[0].url} />
-                                                <p class="text-green-800 text-xs sm:text-sm md:text-base lg:text-lg">{seedTracks[0].name} <br /> <i>by {seedTracks[0].artists[0].name}</i></p>
+                                                <p class="p-1 text-green-800 text-xs sm:text-sm md:text-base lg:text-lg">{seedTracks[0].name} <br /> <i>by {seedTracks[0].artists[0].name}</i></p>
                                             </div>
                                         </div>
                                     </div>

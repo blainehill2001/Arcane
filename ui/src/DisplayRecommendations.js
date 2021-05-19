@@ -38,22 +38,21 @@ const DisplayRecommendations = ({ seedTracks, recommendations, updateRecommendat
     }
 
     function responseIsSuccess(data) {
-        var error;
-        if (data && data.status.error == null) {
+        let error;
+        if (data && data.status) {
             error = data.status;
         } else {
             error = data.status.error.response.status || "401";
         }
 
-        var msg = data.message;
-        
+        var message = data.message;
+
         if (error && parseInt(error) == 401) {
-            alert(msg);
+            alert(message);
             return false;
         }
         if (error && error >= 400) {
-            console.log(msg);
-            alert(msg || "Error: Please try logging in and out again.");
+            alert(message || "Error: Please try logging in and out again.");
             return false;
         }
         return true;
@@ -77,9 +76,11 @@ const DisplayRecommendations = ({ seedTracks, recommendations, updateRecommendat
                             {recommendations.map((track) => {
                                 return(
                                     <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3">
-                                        <button class="object-cover w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" key={track.id}  onClick={() => deleteRecommendation(recommendations, track)}>   
-                                            <img src={track.album.images[0].url} />
-                                            <p class="text-xs sm:text-sm md:text-base lg:text-lg">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
+                                        <button class="object-cover w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" key={track.id}  onClick={() => deleteRecommendation(recommendations, track)}>
+                                            <div class="flex flex-row flex-wrap justify-around">
+                                                <img src={track.album.images[0].url} />
+                                                <p class="p-1 text-xs sm:text-sm md:text-base lg:text-lg">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
+                                            </div>
                                         </button>
                                         <br />
                                     </div>

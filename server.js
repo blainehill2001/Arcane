@@ -18,34 +18,16 @@ var bodyParser = require('body-parser');
 var path = require('path');
 
 var port = 3001;
-var client_id = process.env.REACT_APP_CLIENT_ID; // Your client id
-var client_secret = process.env.REACT_APP_CLIENT_SECRET; // Your secret
-var redirect_uri = "http://localhost:" + port + "/api/callback"; // Your redirect uri
-//const directoryPath = __dirname + "/../";
+var client_id = process.env.REACT_APP_CLIENT_ID; // Client ID
+var client_secret = process.env.REACT_APP_CLIENT_SECRET; // Client Secret
+var redirect_uri = "http://localhost:" + port + "/api/callback"; // Client Redirect Uri
+
 //if in prod, set port and redirect_uri appropriately
 if (process.env.NODE_ENV == "production") {
     port = process.env.PORT;
     redirect_uri = process.env.SPOTIFY_CALL_BACK_URI;
 }
 
-// axios.interceptors.request.use(req => {
-//     console.log(`${req.method} ${req.url}`);
-//     // Important: request interceptors **must** return the request.
-//     return req;
-//   });
-  
-//   axios.interceptors.response.use(res => {
-//     console.log(res.data.json);
-//     // Important: response interceptors **must** return the response.
-//     return res;
-//   });
-
-
-/**
- * Generates a random string containing numbers and letters
- * @param  {number} length The length of the string
- * @return {string} The generated string
- */
 var generateRandomString = function(length) {
 var text = '';
 var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -60,22 +42,6 @@ var stateKey = 'spotify_auth_state';
 
 var app = express();
 
-// app.use(function (req, res, next) {
-
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-//     res.setHeader('Access-Control-Allow-Credentials', true);
-//     next();
-// });
-
-// app.use(express.static(path.join(__dirname, '/build')));
-// app.get('/*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '/build', 'index.html'));
-// })
-
-
-//app .use(express.static(directoryPath))
 app.use(express.static(path.join(__dirname, 'ui/build')))
     .use(helmet())
     .use(compression())
@@ -90,7 +56,6 @@ app.get('/api/login', function(req, res) {
     res.clearCookie(stateKey);
     res.cookie(stateKey, state);
 
-    // your application requests authorization
     var scope = 'playlist-modify-public playlist-modify-private';
     res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
@@ -98,14 +63,12 @@ app.get('/api/login', function(req, res) {
         client_id: client_id,
         scope: scope,
         redirect_uri: redirect_uri,
-        state: state
+        state: state,
+        show_dialog: true
         }));
 });
 
 app.get('/api/callback', function(req, res) {
-
-    // your application requests refresh and access tokens
-    // after checking the state parameter
 
     var code = req.query.code || null;
     var state = req.query.state || null;
@@ -144,7 +107,6 @@ app.get('/api/callback', function(req, res) {
             var access_token = body.access_token,
                 refresh_token = body.refresh_token;
 
-            // we can also pass the token to the browser to make requests from there
             if(process.env.NODE_ENV == "production"){
                 res.redirect('/#' +
                 querystring.stringify({
@@ -249,10 +211,7 @@ app.post("/api/recommendations", function (req, res) {
         });
 });
 
-
-// Creates a playlist, then calls function to add songs to playlist
 app.get("/api/createPlaylist", function (req, res) {
-    
     let desc = "Your Arcane playlist starring: ";
     for(let i = 0; i < req.query.seedTrack_names.length; i++){
         if(i == req.query.seedTrack_names.length-1 && req.query.seedTrack_names.length > 1){
@@ -264,7 +223,6 @@ app.get("/api/createPlaylist", function (req, res) {
         }
     }
 
-    // get user profile information
     axios({
         method: "get",
         url: "https://api.spotify.com/v1/me",
@@ -273,7 +231,6 @@ app.get("/api/createPlaylist", function (req, res) {
         },
     })
         .then((response) => {
-            // on success get id and create playlist
             let id = response.data.id;
 
             let url = "https://api.spotify.com/v1/users/" + id + "/playlists";
@@ -319,7 +276,6 @@ app.get("/api/createPlaylist", function (req, res) {
         });
 });
 
-// Add a list of tracks by id to a playlist by id
 app.get("/api/addTracks", function (req, res) {
     let track_list = req.query.recommendation_ids;
     let playlistId = req.query.playlist_id;
@@ -364,7 +320,7 @@ function handleError(error) {
     if (error.response.status == "401") {
         return {
             status: error.response.status,
-            message: "The session has expired - please reload the page",
+            message: "Please log out and in again.",
             trackResult: null
         };
     } else if (error.response.status == "400") {
@@ -376,7 +332,7 @@ function handleError(error) {
     } else {
         return {
             status: error.response.status,
-            message: "Something went wrong, no idea what happened.",
+            message: "Something is wrong!",
             trackResult: null
         };
     }

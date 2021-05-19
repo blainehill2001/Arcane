@@ -11,6 +11,16 @@ module.exports = {
           'full': '100%',
          }
       },
+      fontSize: {
+        'super-duper-small': '.4rem',
+        'super-small': '.5rem',
+        'xs': '.75rem',
+        'sm': '.875rem',
+        'tiny': '.875rem',
+        'base': '1rem',
+        'lg': '1.125rem',
+        'xl': '1.25rem',
+      }
     },
     variants: {
       extend: {

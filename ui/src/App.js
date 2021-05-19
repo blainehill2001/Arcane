@@ -5,11 +5,8 @@ import DisplaySeeds from './DisplaySeeds';
 import DisplayRecommendations from './DisplayRecommendations';
 import CreatePlaylist from './CreatePlaylist'
 import Cookies from "js-cookie";
-import hallowed_background from "./assets/Hollowed-Boxes.svg"
 import './App.css'; 
 var _ = require('underscore');
-
-
 
 
 function App() {
@@ -19,6 +16,7 @@ function App() {
   const token_key = 'arcane-token-key';
   const[hasLoggedIn, setHasLoggedIn] = useState(false);
   const[background, setBackground] = useState("");
+
 
   const updateSeeds = (trackArray, newTrack) => {
     trackArray.push(newTrack);
@@ -89,9 +87,8 @@ function App() {
 
   function generateBackground(){
     if(background == ""){
-      let randomNumber = getRandomInt(10);
+      let randomNumber = getRandomInt(40);
       let backgroundClassname = "App-background" + randomNumber.toString();
-      console.log(backgroundClassname);
       setBackground(backgroundClassname);
     }
     return background;
@@ -112,26 +109,30 @@ function App() {
       setCookie();
     }
     updateHasLoggedIn();
-    console.log(hasLoggedIn);
   }, []);
   
   const content = (
-    <header className="App-header">
-      <div class="w-11/12">
-          <Welcome  hasLoggedIn={hasLoggedIn}/>
-          <SearchTrack seedTracks={seedTracks} updateSeeds={updateSeeds}/>
-          <DisplaySeeds seedTracks={seedTracks} deleteSeed={deleteSeed}/>
-          <DisplayRecommendations seedTracks={seedTracks} recommendations={recommendations} updateRecommendations={updateRecommendations} deleteRecommendation={deleteRecommendation} clearRecommendations={clearRecommendations}/>
-          <CreatePlaylist seedTracks={seedTracks} recommendations={recommendations}/>
-        </div>
-      </header>
+    <header className="App-header2">
+        <Welcome  hasLoggedIn={hasLoggedIn} setHasLoggedIn={setHasLoggedIn}/>
+        <header className="App-header">
+          <div class="w-11/12">
+            <SearchTrack seedTracks={seedTracks} updateSeeds={updateSeeds} hasLoggedIn={hasLoggedIn}/>
+            <DisplaySeeds seedTracks={seedTracks} deleteSeed={deleteSeed}/>
+            <DisplayRecommendations seedTracks={seedTracks} recommendations={recommendations} updateRecommendations={updateRecommendations} deleteRecommendation={deleteRecommendation} clearRecommendations={clearRecommendations}/>
+            <CreatePlaylist seedTracks={seedTracks} recommendations={recommendations}/>
+          </div>
+        </header>
+    </header>
   );
 
 
   return (
+
     <div className="App">
       <div className={generateBackground()}>
-        {content}
+        <div class="overscroll-contain">
+          {content}
+        </div>
       </div>
     </div>
     

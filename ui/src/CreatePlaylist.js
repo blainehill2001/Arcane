@@ -57,22 +57,21 @@ const CreatePlaylist= ({ seedTracks, recommendations }) => {
 
 
     function responseIsSuccess(data) {
-        var error;
-        if (data && data.status.error == null) {
+        let error;
+        if (data && data.status) {
             error = data.status;
         } else {
             error = data.status.error.response.status || "401";
         }
 
-        var msg = data.message;
-        // if unauthorized we need to prompt log in
+        var message = data.message;
+
         if (error && parseInt(error) == 401) {
-            alert(msg);
+            alert(message);
             return false;
         }
         if (error && error >= 400) {
-            console.log(msg);
-            alert(msg || "Error: Please try logging in and out again.");
+            alert(message || "Error: Please try logging in and out again.");
             return false;
         }
         return true;

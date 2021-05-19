@@ -4,13 +4,11 @@ import { useForm } from "react-hook-form";
 import $ from 'jquery';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import Cookies from "js-cookie";
-import DisplayRecommendations from "./DisplayRecommendations";
-import { forEach } from 'core-js/es/array';
 
 
-const SearchTrack = ({ seedTracks, updateSeeds}) => {
+const SearchTrack = ({ seedTracks, updateSeeds, hasLoggedIn}) => {
 
-    const { register, handleSubmit, watch, errors } = useForm();
+    const { handleSubmit} = useForm();
     const [trackQuery, setTrackQuery] = useState('');
     const [tracks, setTracks] = useState([]);
     const [searched, setSearched] = useState(false);
@@ -49,22 +47,21 @@ const SearchTrack = ({ seedTracks, updateSeeds}) => {
     }
 
     function responseIsSuccess(data) {
-        var error;
-        if (data && data.status.error == null) {
+        let error;
+        if (data && data.status) {
             error = data.status;
         } else {
             error = data.status.error.response.status || "401";
         }
 
-        var msg = data.message;
-        // if unauthorized we need to prompt log in
+        var message = data.message;
+
         if (error && parseInt(error) == 401) {
-            alert(msg);
+            alert(message);
             return false;
         }
         if (error && error >= 400) {
-            console.log(msg);
-            alert(msg || "Error: Please try logging in and out again.");
+            alert(message || "Error: Please try logging in and out again.");
             return false;
         }
         return true;
@@ -85,43 +82,44 @@ const SearchTrack = ({ seedTracks, updateSeeds}) => {
 
     return(
         <div>
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <div class="flex flex-col m-10">
-                    <Form.Label class="py-1">Search for your top tracks:</Form.Label>
-                    <Form.Text className="text-muted py-1">
-                        Select a track below to add it to your recommendation seeds
-                    </Form.Text>
+            {hasLoggedIn == true &&
+                <div class="mx-auto my-4 px-4 py-4 ring ring-transparent rounded-lg bg-green-700">
+                    <Form onSubmit={handleSubmit(onSubmit)}>
+                        <div class="flex flex-col">
+                            
+                            <h4>Search for your top tracks:</h4>
+                            <p class="text-xs sm:text-sm md:text-base lg:text-lg p-2">Select a track below to add it to your recommendation seeds:</p>
 
-                    <InputGroup className="mb-3">
-                        <Form.Control required id="validationTrack" class="p-12" name="query" placeholder="Enter track name" defaultValue={''} autoComplete="on" onChange={handleChange}/>
-                        <InputGroup.Append>
-                        <Button class="bg-gray-800" type="submit" defaultValue="Submit" variant="secondary">Submit</Button>
-                        </InputGroup.Append>
-                    </InputGroup>
-                </div>
-            </Form>
-            
-            {searched == true && 
-                <div class="flex flex-row flex-wrap mx-8 my-4 px-4 py-4 ring ring-transparent rounded-lg bg-green-700">
-                    {tracks.map((track) => {
-                        return(
-                            <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3">
-                                <button class="object-cover w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" key={track.id} onClick={() => addTracktoSeeds(track)} name={track.name}>   
-                                    <img src={track.album.images[0].url} />
-                                    <p class="text-xs sm:text-sm md:text-base lg:text-lg">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
-                                </button>
-                            </div>
-                            );
-                        })}
+                            <InputGroup className="mb-3">
+                                <Form.Control required id="validationTrack" class="p-12" name="query" placeholder="Enter track name" defaultValue={''} autoComplete="on" onChange={handleChange}/>
+                                <InputGroup.Append>
+                                <Button class="bg-gray-800" type="submit" defaultValue="Submit" variant="secondary">Submit</Button>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        </div>
+                    </Form>
+                    
+                    {searched == true && 
+                        <div class="flex flex-row flex-wrap">
+                            {tracks.map((track) => {
+                                return(
+                                    <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3">
+                                        <button class="object-cover w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" key={track.id} onClick={() => addTracktoSeeds(track)} name={track.name}>   
+                                            <div class="flex flex-row flex-wrap justify-around">
+                                                <img src={track.album.images[0].url} />
+                                                <p class="p-1 text-xs sm:text-sm md:text-base lg:text-lg">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    );
+                                })}
+                        </div>
+                    }
                 </div>
             }
         </div>
-
     );
 }
 
 
 export default SearchTrack;
-
-//flex flex-row flex-wrap mx-8 my-4 px-4 py-4 ring rounded-lg bg-green-700
-//mx-auto w-1/5 p-3
