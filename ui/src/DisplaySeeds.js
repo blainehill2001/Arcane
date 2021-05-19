@@ -11,9 +11,9 @@ const DisplaySeeds = ({ seedTracks, deleteSeed }) => {
                         {seedTracks.map((seedTrack) => {
                             return(
                                 <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3 h-full" key={seedTrack.id} id="heightgrabber">
-                                    <button name={seedTrack.name} class="object-cover w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" onClick={() => deleteSeed(seedTracks, seedTrack)}>
+                                    <button name={seedTrack.name} class="w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" onClick={() => deleteSeed(seedTracks, seedTrack)}>
                                         <div class="flex flex-row flex-wrap justify-around">
-                                            <img src={seedTrack.album.images[0].url} />
+                                            <img src={seedTrack.album.images[0].url} class="object-scale-down"/>
                                             <p class="p-1 text-xs sm:text-sm md:text-base lg:text-lg">{seedTrack.name} <br /> <i>by {seedTrack.artists[0].name}</i></p>
                                         </div>
                                     </button>
@@ -23,9 +23,9 @@ const DisplaySeeds = ({ seedTracks, deleteSeed }) => {
                             {[...Array(5-(seedTracks.length || 0))].map((i) =>{
                                 return(
                                     <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3" key={i}>
-                                        <div class="object-cover w-full h-full p-4 ring ring-transparent rounded-lg min-h:full bg-green-800">
+                                        <div class="w-full h-full p-4 ring ring-transparent rounded-lg min-h:full bg-green-800">
+                                            <img class="opacity-0 object-scale-down" src={seedTracks[0].album.images[0].url} />
                                             <div class="flex flex-row flex-wrap justify-around">
-                                                <img class="opacity-0" src={seedTracks[0].album.images[0].url} />
                                                 <p class="p-1 text-green-800 text-xs sm:text-sm md:text-base lg:text-lg">{seedTracks[0].name} <br /> <i>by {seedTracks[0].artists[0].name}</i></p>
                                             </div>
                                         </div>
