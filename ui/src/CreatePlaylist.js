@@ -49,7 +49,7 @@ const CreatePlaylist= ({ seedTracks, recommendations }) => {
                     data: requestData2,
                     type: "GET"
                 }).done(function(){
-                    alert("Check out Spotify for your new Arcane Mix!");
+                    alert("Check out Spotify for your new Arcane mix!");
                 })
             }
         });

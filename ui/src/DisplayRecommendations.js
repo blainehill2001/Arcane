@@ -72,21 +72,24 @@ const DisplayRecommendations = ({ seedTracks, recommendations, updateRecommendat
                     </div>
                     <div>
                         { recommendations.length > 0 &&
-                            <div class="flex flex-row flex-wrap mx-8 my-4 px-4 py-4 ring ring-transparent rounded-lg bg-green-700">
-                            {recommendations.map((track) => {
-                                return(
-                                    <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3">
-                                        <button class="w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" key={track.id}  onClick={() => deleteRecommendation(recommendations, track)}>
-                                            <img src={track.album.images[0].url} class="object-scale-down"/>
-                                            <div class="flex flex-row flex-wrap justify-around">
-                                                <p class="p-1 text-xs sm:text-sm md:text-base lg:text-lg">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
+                            <div class="mx-8 my-4 px-4 py-4 ring ring-transparent rounded-lg bg-green-700">
+                                <p class="text-xs sm:text-sm md:text-base lg:text-lg p-2">If you're not a fan of a recommendation, select to remove it!</p>
+                                    <div class="flex flex-row flex-wrap">
+                                    {recommendations.map((track) => {
+                                        return(
+                                            <div class="container mx-auto w-1/2 lg:w-1/5 md:w-1/3 p-3">
+                                                <button class="w-full h-full p-4 ring ring-transparent rounded-lg bg-green-800 hover:bg-blue-500 active:bg-indigo-800" key={track.id}  onClick={() => deleteRecommendation(recommendations, track)}>
+                                                    <img src={track.album.images[0].url} class="object-scale-down"/>
+                                                    <div class="flex flex-row flex-wrap justify-around">
+                                                        <p class="p-1 text-xs sm:text-sm md:text-base lg:text-lg">{track.name} <br /> <i>by {track.artists[0].name}</i></p>
+                                                    </div>
+                                                </button>
+                                                <br />
                                             </div>
-                                        </button>
-                                        <br />
+                                            );
+                                        })}
                                     </div>
-                                    );
-                                })}
-                        </div>
+                            </div>
                         }
                     </div>
 
