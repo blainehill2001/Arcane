@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
+    "build": "cd ui && npm install && npm run build",
     "dev": "concurrently \"node server.js\" \"cd ui && npm run start\"",
     "heroku-postbuild": "cd ui && npm install && npm run build"
   },
