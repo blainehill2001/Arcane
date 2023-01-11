@@ -4,22 +4,16 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.2",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "axios": "^0.21.1",
     "bootstrap": "^5.0.0",
     "jquery": "^3.6.0",
     "js-cookie": "^2.2.1",
-    "popper.js": "^1.16.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.4.2",
     "react-scripts": "4.0.3",
     "tailwindcss-interaction-variants": "^5.0.0",
-    "underscore": "^1.13.1",
-    "web-vitals": "^1.0.1"
+    "underscore": "^1.13.1"
   },
   "scripts": {
     "start": "craco start",
@@ -35,7 +29,6 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.6",
-    "postcss": "^7.0.35",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2"
   },
   "browserslist": {
