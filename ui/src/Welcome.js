@@ -1,4 +1,4 @@
-// import React from "react";
+import React from "react";
 import { Button } from "react-bootstrap";
 import Cookies from "js-cookie";
 import music_note from "./assets/music.png";

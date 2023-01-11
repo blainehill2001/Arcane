@@ -1,4 +1,4 @@
-// import React from "react";
+import React from "react";
 import $ from "jquery";
 import { Button } from "react-bootstrap";
 import Cookies from "js-cookie";

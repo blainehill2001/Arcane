@@ -1,5 +1,4 @@
-// import React, { useEffect, useState } from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Welcome from "./Welcome";
 import SearchTrack from "./SearchTrack";
 import DisplaySeeds from "./DisplaySeeds";
@@ -7,7 +6,7 @@ import DisplayRecommendations from "./DisplayRecommendations";
 import CreatePlaylist from "./CreatePlaylist";
 import Cookies from "js-cookie";
 import "./App.css";
-var _ = require("underscore");
+import without from "underscore/modules/without.js";
 
 function App() {
   const [seedTracks, setSeedTracks] = useState([]);
@@ -22,7 +21,7 @@ function App() {
   };
 
   const deleteSeed = (trackArray, trackToBeDeleted) => {
-    trackArray = _.without(trackArray, trackToBeDeleted);
+    trackArray = without(trackArray, trackToBeDeleted);
     setSeedTracks([...trackArray]);
   };
 
@@ -32,7 +31,7 @@ function App() {
   };
 
   const deleteRecommendation = (trackArray, trackToBeDeleted) => {
-    trackArray = _.without(trackArray, trackToBeDeleted);
+    trackArray = without(trackArray, trackToBeDeleted);
     setRecommendations([...trackArray]);
   };
 
