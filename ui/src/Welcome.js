@@ -46,8 +46,9 @@ function Welcome({ hasLoggedIn, setHasLoggedIn }) {
                 class="bg-gray-800"
                 variant="secondary btn-lg"
                 onClick={logout}
+                href={url2}
               >
-                <a href={url2}>Log out of Spotify</a>
+                Log out of Spotify
               </Button>
             </div>
           </div>
