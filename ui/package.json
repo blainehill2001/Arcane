@@ -21,12 +21,6 @@
     "test": "craco test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "devDependencies": {
     "autoprefixer": "^9.8.6",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2"
