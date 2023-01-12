@@ -16,7 +16,7 @@ function Welcome({ hasLoggedIn, setHasLoggedIn }) {
 
   let url2;
   if (process.env.NODE_ENV == "production") {
-    url2 = "http://arcane-spotify.herokuapp.com/";
+    url2 = process.env.APP_URL;
   } else {
     url2 = "http://localhost:3000/";
   }
