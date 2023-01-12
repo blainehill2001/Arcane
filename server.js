@@ -9,11 +9,13 @@ if (process.env.NODE_ENV !== "production") {
 var express = require("express"); // Express web server framework
 var request = require("request"); // "Request" library
 var cors = require("cors");
-var path = require("path");
+var querystring = require("querystring");
 var cookieParser = require("cookie-parser");
+var axios = require("axios");
 var helmet = require("helmet");
-var bodyParser = require("body-parser");
 var compression = require("compression");
+var bodyParser = require("body-parser");
+var path = require("path");
 
 var port = 3001;
 var client_id = process.env.REACT_APP_CLIENT_ID; // Client ID
@@ -60,8 +62,7 @@ app
       extended: "true",
       parameterLimit: 1000000,
     })
-  )
-  .use(compression());
+  );
 
 app.get("/api/login", function (req, res) {
   var state = generateRandomString(16);
