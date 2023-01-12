@@ -16,6 +16,7 @@
   },
   "scripts": {
     "start": "craco start",
+    "prod-start": "npm install -g serve && serve -s build",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
